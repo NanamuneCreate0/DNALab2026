@@ -1,28 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class Creature : WorldObject
 {
+    [SerializeField]
+    private List<CreatureCell> cells = new List<CreatureCell>();
+
     [SerializeField] private float hp;
+    [SerializeField] private float speed;
+    [SerializeField] private float viewRange;
     [SerializeField] private float energy;
 
-    public float HP { get => hp; set => hp = value; }
     public float Energy { get => energy; private set => energy = value; }
+    public float HP { get => hp; set => hp = value; }
+    public float Speed { get => speed; set => speed = value; }
+    public float ViewRange { get => viewRange; set => viewRange = value; }
     public float TotalCellSize => totalCellSize;
 
-    private float totalCellSize = 0f;
-    private List<ICreatureCell> cells = new List<ICreatureCell>();
+    private float totalCellSize = 0f; 
     public CreatureMemory Memory { get; private set; } = new CreatureMemory();
 
     public Vector2 Velocity;
-    public float Acceleration = 6f;
 
     public override void Tick()
     {
         //Ž€–S”»’è
         if (HP <= 0f || Energy <= 0f)
         {
+            foreach (var cell in cells){Destroy(cell); }//CreatureCell‚ÌScriptableObject‚ð”jŠü
+            cells.Clear();
             Die();
             return;
         }
@@ -38,7 +44,7 @@ public class Creature : WorldObject
     }
 
     //’Ç‰Á\¬ƒZƒ‹‚ÌInitialize
-    public void AddCell(ICreatureCell cell)
+    public void AddCell(CreatureCell cell)
     {
         cell.Initialize(this);
         cells.Add(cell);

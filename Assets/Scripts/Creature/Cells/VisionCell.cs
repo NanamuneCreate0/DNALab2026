@@ -1,26 +1,26 @@
 using UnityEngine;
 
-public class VisionCell : ICreatureCell
+public class VisionCell : CreatureCell
 {
     const float CellSizeValue = 1.0f;
     const float ViewRadius = 5f;
 
-    private Creature ownCreature;
+    private Creature ownerCreature;
     private float scanTimer;
 
     private static Collider2D[] results = new Collider2D[32];
 
-    public float CellSize => CellSizeValue;
+    public override float CellSize => CellSizeValue;
 
-    public void Initialize(Creature creature)
+    public override void Initialize(Creature creature)
     {
-        ownCreature = creature;
+        ownerCreature = creature;
 
         // ƒXƒLƒƒƒ“•ªŽU
         scanTimer = Random.Range(0.2f, 0.3f);
     }
 
-    public void Tick()
+    public override void Tick()
     {
         scanTimer += SimulationTime.DeltaTime;
 
@@ -32,23 +32,23 @@ public class VisionCell : ICreatureCell
 
     private void Scan()
     {
-        var motivations = ownCreature.Memory.MoveMotivations;
+        var motivations = ownerCreature.Memory.MoveMotivations;
         motivations.Clear();
 
         int count = Physics2D.OverlapCircleNonAlloc(
-            ownCreature.transform.position,
-            ViewRadius,
+            ownerCreature.transform.position,
+            ownerCreature.ViewRange,
             results
         );
 
-        Vector2 myPos = ownCreature.transform.position;
+        Vector2 myPos = ownerCreature.transform.position;
 
         for (int i = 0; i < count; i++)
         {
             var col = results[i];
             var obj = col.GetComponent<WorldObject>();
             if (obj == null) continue;
-            if (obj.Transform == ownCreature.transform) continue;
+            if (obj.Transform == ownerCreature.transform) continue;
 
             //•ûŒü
             Vector2 pos = obj.Transform.position;

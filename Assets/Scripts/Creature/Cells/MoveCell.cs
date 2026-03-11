@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class MoveCell : ICreatureCell
+public class MoveCell : CreatureCell
 {
-    public float CellSize => 1f;
+    public override float CellSize => 1f;
 
-    private Creature owner;
+    private Creature ownerCreature;
 
     const float Straightness = 2f;
-    public void Initialize(Creature creature)
+    public override void Initialize(Creature creature)
     {
-        owner = creature;
+        ownerCreature = creature;
     }
 
-    public void Tick()
+    public override void Tick()
     {
-        var motivations = owner.Memory.MoveMotivations;
+        var motivations = ownerCreature.Memory.MoveMotivations;
         if (motivations.Count == 0) return;
 
         Vector2 move = Vector2.zero;
@@ -28,6 +28,6 @@ public class MoveCell : ICreatureCell
         }
         if (move == Vector2.zero) return;
         move.Normalize();
-        owner.AddAcceleration(move * owner.Acceleration);
+        ownerCreature.AddAcceleration(move * ownerCreature.Speed);
     }
 }

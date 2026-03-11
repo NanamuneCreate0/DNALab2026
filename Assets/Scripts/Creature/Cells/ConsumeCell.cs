@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class ConsumeCell : ICreatureCell
+public class ConsumeCell : CreatureCell
 {
-    private Creature owner;
+    private Creature ownerCreature;
 
     private const float CELL_SIZE = 0.2f;
     private const float CONSUME_RANGE = 0.5f;
 
-    public float CellSize => CELL_SIZE;
+    public override float CellSize => CELL_SIZE;
 
-    public void Initialize(Creature creature)
+    public override void Initialize(Creature creature)
     {
-        owner = creature;
+        ownerCreature = creature;
     }
 
-    public void Tick()
+    public override void Tick()
     {
         TryConsume();
     }
@@ -23,7 +23,7 @@ public class ConsumeCell : ICreatureCell
     private void TryConsume()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(
-            owner.transform.position,
+            ownerCreature.transform.position,
             CONSUME_RANGE
         );
 
@@ -33,7 +33,7 @@ public class ConsumeCell : ICreatureCell
 
             if (mana == null) continue;
 
-            owner.ChangeEnergy(mana.Energy);
+            ownerCreature.ChangeEnergy(mana.Energy);
             mana.ExcuteDie();
             break;
         }

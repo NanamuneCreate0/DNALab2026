@@ -30,10 +30,26 @@ public class InitialCreatureSpawner : MonoBehaviour
             Vector3 spawnPosition = new Vector3(x, y, 0f);
             //こうするとInstantiate()はGameObjectの所持コンポーネントCreatureを返す
             Creature creature = Instantiate(prefab, spawnPosition, Quaternion.identity);
-            creature.AddCell(new HPCell());
-            creature.AddCell(new VisionCell());
-            creature.AddCell(new MoveCell());
-            creature.AddCell(new ConsumeCell());
+            creature.AddCell(ScriptableObject.CreateInstance<VisionCell>());
+            creature.AddCell(ScriptableObject.CreateInstance<MoveCell>());
+            creature.AddCell(ScriptableObject.CreateInstance<ConsumeCell>());
+
+            var speed = ScriptableObject.CreateInstance<SpeedCell>();
+            speed.Init(6f);
+            creature.AddCell(speed);
+
+            var view = ScriptableObject.CreateInstance<ViewRangeCell>();
+            view.Init(6f);
+            creature.AddCell(view);
+
+            var spProd = ScriptableObject.CreateInstance<SpeedProductionCell>();
+            spProd.Init(0.1f);
+            creature.AddCell(spProd);
+
+            var vrProd = ScriptableObject.CreateInstance<ViewRangeProductionCell>();
+            vrProd.Init(0.1f);
+            creature.AddCell(vrProd);
+
             creature.ChangeEnergy(creature.TotalCellSize*InitialEnergyRate);
         }
     }

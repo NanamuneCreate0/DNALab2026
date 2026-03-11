@@ -1,14 +1,16 @@
-public class HPCell : ICreatureCell
+public class HPCell : CreatureCell
 {
-    const float CellSizeValue = 1.0f;
-    const float HPValue = 10f;
-
-    private Creature ownCreature;
-    public float CellSize => 1.0f; 
-    public void Initialize(Creature creature)
+    public override float CellSize => 1.0f;
+    private float hpValue;
+    private Creature ownerCreature;
+    public void Init(float hpValue)
     {
-        ownCreature = creature;
-        ownCreature.HP += HPValue;
+        this.hpValue = hpValue;
     }
-    public void Tick(){ return; }
+    public override void Initialize(Creature creature)
+    {
+        ownerCreature = creature;
+        ownerCreature.HP += hpValue;
+    }
+    public override void Tick(){ return; }
 }
