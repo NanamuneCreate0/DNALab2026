@@ -15,6 +15,9 @@ public class Creature : WorldObject
     private List<ICreatureCell> cells = new List<ICreatureCell>();
     public CreatureMemory Memory { get; private set; } = new CreatureMemory();
 
+    public Vector2 Velocity;
+    public float Acceleration = 6f;
+
     public override void Tick()
     {
         //死亡判定
@@ -23,6 +26,9 @@ public class Creature : WorldObject
             Die();
             return;
         }
+
+        //動く
+        PhysicsTick();
 
         //全構成セルのTick（Updateみたいなもの）
         for (int i = 0; i < cells.Count; i++)
@@ -42,5 +48,16 @@ public class Creature : WorldObject
     public void ChangeEnergy(float amount)
     {
         energy += amount;
+    }
+    public void AddAcceleration(Vector2 accel)
+    {
+        Velocity += accel * SimulationTime.DeltaTime;
+    }
+    public void PhysicsTick()
+    {
+        float drag = 0.98f;
+        Velocity *= Mathf.Pow(drag, SimulationTime.DeltaTime * 60f);
+
+        transform.position += (Vector3)(Velocity * SimulationTime.DeltaTime);
     }
 }

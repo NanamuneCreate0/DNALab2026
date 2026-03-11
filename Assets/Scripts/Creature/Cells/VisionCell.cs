@@ -32,36 +32,38 @@ public class VisionCell : ICreatureCell
 
     private void Scan()
     {
+        var motivations = ownCreature.Memory.MoveMotivations;
+        motivations.Clear();
+
         int count = Physics2D.OverlapCircleNonAlloc(
             ownCreature.transform.position,
             ViewRadius,
             results
         );
 
-        WorldObject nearest = null;
-        float nearestDist = float.MaxValue;
+        Vector2 myPos = ownCreature.transform.position;
 
         for (int i = 0; i < count; i++)
         {
             var col = results[i];
-
             var obj = col.GetComponent<WorldObject>();
             if (obj == null) continue;
-
             if (obj.Transform == ownCreature.transform) continue;
 
-            float dist = Vector2.Distance(
-                ownCreature.transform.position,
-                obj.Transform.position
-            );
+            //•ûŒü
+            Vector2 pos = obj.Transform.position;
+            float dist = Vector2.Distance(myPos, pos);
+            if (dist <= 0.001f) continue;
+            Vector2 dir = (pos - myPos).normalized;
 
-            if (dist < nearestDist)
-            {
-                nearestDist = dist;
-                nearest = obj;
-            }
+            //—Dæ“x
+            float importance = 0f;
+            if (obj is Mana) importance = 1.0f;
+            else if (obj is Creature) importance = 0.2f;
+            float priority = importance / dist;
+
+            //Motivation‚É“n‚·
+            motivations.Add((priority, dir));
         }
-
-        ownCreature.Memory.VisibleTarget = nearest;
     }
 }

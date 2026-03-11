@@ -28,8 +28,8 @@ public class SimulationTimeRunner : MonoBehaviour
             }
             return;
         }
-        timer += Time.deltaTime * simulationSpeed;
 
+        timer += Time.deltaTime * simulationSpeed;
         while (timer >= SimulationTime.DeltaTime)
         {
             RunTick();

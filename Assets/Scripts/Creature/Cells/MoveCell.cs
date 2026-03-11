@@ -5,8 +5,8 @@ public class MoveCell : ICreatureCell
     public float CellSize => 1f;
 
     private Creature owner;
-    private float speed = 3f;
-    const float StopDistance = 0.3f;
+
+    const float Straightness = 2f;
     public void Initialize(Creature creature)
     {
         owner = creature;
@@ -14,14 +14,20 @@ public class MoveCell : ICreatureCell
 
     public void Tick()
     {
-        WorldObject target = owner.Memory.VisibleTarget;
-        //‘ÎÛ‚ª‚¢‚È‚¯‚ê‚Îreturn
-        if (target == null) { return; }
-        //‘ÎÛ‚ªŠù‚É—×Ú‚È‚çreturn
-        float dist = Vector2.Distance(owner.transform.position, target.Transform.position);
-        if (dist < StopDistance) return;
-        //‘ÎÛ‚Ì•ûŒü‚Éi‚Ş
-        Vector3 dir = (target.Transform.position - owner.transform.position).normalized;
-        owner.transform.position += dir * speed * SimulationTime.DeltaTime;
+        var motivations = owner.Memory.MoveMotivations;
+        if (motivations.Count == 0) return;
+
+        Vector2 move = Vector2.zero;
+        for (int i = 0; i < motivations.Count; i++)
+        {
+            var m = motivations[i];
+
+            float weight = Mathf.Pow(m.priority, Straightness);
+
+            move += m.direction * weight;
+        }
+        if (move == Vector2.zero) return;
+        move.Normalize();
+        owner.AddAcceleration(move * owner.Acceleration);
     }
 }
