@@ -7,13 +7,11 @@ public class HPCell : CreatureCell
     public override float CellSize => cellSize;
     [SerializeField]
     private float hpValue;
-    private float initialHpValue;
     private const float CELLSIZE_PER_FUNCTION = 0.1f;
     private Creature ownerCreature;
     public void Init(float hpValue)
     {
         this.hpValue = hpValue;
-        initialHpValue = hpValue;
     }
     public override void Initialize(Creature creature)
     {
@@ -24,13 +22,10 @@ public class HPCell : CreatureCell
     public override void Tick(){ return; }
     public override void OnAging()
     {
-        if (hpValue <= 0f) return;
-
-        float loss = initialHpValue * 0.02f;
-        if (loss > hpValue) { loss = hpValue; }
+        float loss = hpValue * AgingRate;// 指数減少：残り値のAgingRateずつ減少
         hpValue -= loss;
         ownerCreature.HP -= loss;
-        if (hpValue < 0.0001f){hpValue = 0f;}
+        if (hpValue < 0.0001f) hpValue = 0f;
 
         cellSize = CELLSIZE_PER_FUNCTION * hpValue;
     }

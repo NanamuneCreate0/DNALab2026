@@ -56,9 +56,9 @@ public class SpeedProductionCell : CreatureCell
 
     public override void OnAging()
     {
-        // ˜VŠ‚ÅŒø—¦‚ğ2%Œ¸­
-        efficiency -= 0.02f;
-        if (efficiency < 0f)
+        // w”Œ¸­‚ÅŒø—¦’á‰º
+        efficiency *= 1 - AgingRate;
+        if (efficiency < 0.0001f)
             efficiency = 0f;
 
         UpdateCellSize();

@@ -6,4 +6,5 @@ public abstract class CreatureCell : ScriptableObject
     public abstract void Initialize(Creature creature);
     public abstract void Tick();
     public abstract void OnAging();
+    protected virtual float AgingRate => 0.02f;
 }

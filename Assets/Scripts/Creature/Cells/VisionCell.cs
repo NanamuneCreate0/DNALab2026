@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class VisionCell : CreatureCell
 {
     public override float CellSize => 1.0f;
+
+    private List<(float priority, Vector3 dir)> cachedMotivations=new List<(float priority, Vector3 dir)>();
     private Creature ownerCreature;
     private float scanTimer;
 
@@ -19,10 +22,16 @@ public class VisionCell : CreatureCell
     {
         scanTimer += SimulationTime.DeltaTime;
 
-        if (scanTimer < 0.2f) return;
-        scanTimer = 0f;
+        if (scanTimer >= 0.2f)
+        {
 
-        Scan();
+            scanTimer -= 0.2f;
+
+            Scan();
+        }
+
+        var motivations = ownerCreature.Memory.NextMoveMotivations;
+        if (cachedMotivations != null){ foreach (var m in cachedMotivations) { motivations.Add(m); } }
     }
     public override void OnAging()
     {
@@ -30,9 +39,7 @@ public class VisionCell : CreatureCell
 
     private void Scan()
     {
-        var motivations = ownerCreature.Memory.MoveMotivations;
-        motivations.Clear();
-
+        cachedMotivations.Clear();
         int count = Physics2D.OverlapCircleNonAlloc(
             ownerCreature.transform.position,
             ownerCreature.ViewRange,
@@ -57,11 +64,11 @@ public class VisionCell : CreatureCell
             //óDêÊìx
             float importance = 0f;
             if (obj is Mana) importance = 1.0f;
-            else if (obj is Creature) importance = 0.2f;
+            else if (obj is Creature) importance = -0.3f;
             float priority = importance / dist;
 
             //MotivationÇ…ìnÇ∑
-            motivations.Add((priority, dir));
+            cachedMotivations.Add((priority, dir));
         }
     }
 }

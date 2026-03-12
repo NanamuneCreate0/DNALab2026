@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: -8800308573806546114, guid: 987a28d3861835b45a2644d9cf02acd4, type: 3}
-  NumberOfInitialBirth: 10
+  NumberOfInitialBirth: 5
   RadiusOfInitialBirth: 15
 --- !u!4 &1078098627
 Transform:
@@ -386,7 +386,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetCreature: {fileID: 0}
-  graphSize: {x: 300, y: 100}
+  graphPosition: {x: 10, y: 10}
+  borderColor: {r: 1, g: 1, b: 1, a: 1}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0.3}
+  lineColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!4 &1717343199
 Transform:
   m_ObjectHideFlags: 0

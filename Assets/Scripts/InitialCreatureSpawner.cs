@@ -4,7 +4,7 @@ public class InitialCreatureSpawner : MonoBehaviour
 {
     const float InitialEnergyRate = 10f;
     [SerializeField] private Creature prefab;
-    [SerializeField] private int NumberOfInitialBirth = 10;
+    [SerializeField] private int NumberOfInitialBirth = 5;
     [SerializeField] private float RadiusOfInitialBirth = 15f;
 
     private void Start()
@@ -33,21 +33,22 @@ public class InitialCreatureSpawner : MonoBehaviour
             creature.AddCell(ScriptableObject.CreateInstance<VisionCell>());
             creature.AddCell(ScriptableObject.CreateInstance<MoveCell>());
             creature.AddCell(ScriptableObject.CreateInstance<ConsumeCell>());
+            creature.AddCell(ScriptableObject.CreateInstance<HomingCell>());
 
             var speed = ScriptableObject.CreateInstance<SpeedCell>();
-            speed.Init(2f);
+            speed.Init(0.5f);
             creature.AddCell(speed);
 
             var view = ScriptableObject.CreateInstance<ViewRangeCell>();
-            view.Init(2f);
+            view.Init(0.5f);
             creature.AddCell(view);
 
             var spProd = ScriptableObject.CreateInstance<SpeedProductionCell>();
-            spProd.Init(1f);
+            spProd.Init(0.4f);
             creature.AddCell(spProd);
 
             var vrProd = ScriptableObject.CreateInstance<ViewRangeProductionCell>();
-            vrProd.Init(1f);
+            vrProd.Init(0.4f);
             creature.AddCell(vrProd);
 
             creature.ChangeEnergy(creature.TotalCellSize * InitialEnergyRate);

@@ -12,17 +12,17 @@ public class Creature : WorldObject
     [SerializeField] private float viewRange;
     [SerializeField] private float energy;
 
+    public float TotalCellSize => totalCellSize;
     public float Energy { get => energy; private set => energy = value; }
-    public float HP { get => hp; set => hp = value; }
     public float Speed { get => speed; set => speed = value; }
     public float ViewRange { get => viewRange; set => viewRange = value; }
-    public float TotalCellSize => totalCellSize;
+    public float HP { get => hp; set => hp = value; }
 
     public CreatureMemory Memory { get; private set; } = new CreatureMemory();
 
     public Vector2 Velocity;
 
-
+    //代謝
     const float KLEIBER_EXPONENT = 0.75f;//クライバー則。代謝はCellSizeの0.75乗に比例する
     private float metabolismTimer = 0f;
     const float METABOLISM_INTERVAL = 1f;
@@ -53,14 +53,23 @@ public class Creature : WorldObject
             return;
         }
 
-        //動く
-        PhysicsTick();
+        // 次Tick用Motivation初期化
+        Memory.NextMoveMotivations.Clear();
 
         //全構成セルのTick（Updateみたいなもの）
         for (int i = 0; i < cells.Count; i++)
         {
             cells[i].Tick();
         }
+
+        // Motivationバッファを入れ替える（swap）
+        var temp = Memory.CurrentMoveMotivations;
+        Memory.CurrentMoveMotivations = Memory.NextMoveMotivations;
+        Memory.NextMoveMotivations = temp;
+
+
+        //動く
+        PhysicsTick();
 
         //代謝（Energy消費をCellSizeに比例して行う）
         MetabolismTick();
