@@ -2,34 +2,49 @@ using UnityEngine;
 
 public class ViewRangeProductionCell : CreatureCell
 {
-    public override float CellSize => 1.0f;
+    [SerializeField]
+    float cellSize;
+    public override float CellSize => cellSize;
 
-    private float viewRangeValue;
+    [SerializeField]
+    private float viewRangeValue; // 不変の設計値
+
+    [SerializeField]
+    private float efficiency = 1f; // 老衰による機能効率
+    public float Efficiency => efficiency;
+
     private Creature ownerCreature;
 
-    // 5秒ごとに生産するためのタイマー
-    private float timer = 0f;
-    private const float PRODUCE_INTERVAL = 5f;
+    private const float CELLSIZE_PER_FUNCTION = 4f;
+
+    private float productionProgress = 0f;
+    private const float PRODUCE_INTERVAL = 2f;
+
     public void Init(float viewRangeValue)
     {
         this.viewRangeValue = viewRangeValue;
+        efficiency = 1f;
     }
 
     public override void Initialize(Creature creature)
     {
         ownerCreature = creature;
+        UpdateCellSize();
     }
 
     public override void Tick()
     {
-        // タイマー更新（Tickはフレームごと）
-        timer += SimulationTime.DeltaTime;
+        // 生産速度は効率に比例
+        productionProgress += SimulationTime.DeltaTime * efficiency;
 
-        if (timer >= PRODUCE_INTERVAL)
+        if (productionProgress >= PRODUCE_INTERVAL)
         {
             Produce();
-            timer -= PRODUCE_INTERVAL; // タイマーリセット
+            productionProgress -= PRODUCE_INTERVAL; // タイマーリセット
         }
+
+        // 毎Tickで体積更新
+        UpdateCellSize();
     }
 
     private void Produce()
@@ -37,5 +52,20 @@ public class ViewRangeProductionCell : CreatureCell
         var view = ScriptableObject.CreateInstance<ViewRangeCell>();
         view.Init(viewRangeValue);
         ownerCreature.AddCell(view);
+    }
+
+    public override void OnAging()
+    {
+        // 老衰で効率を2%減少
+        efficiency -= 0.02f;
+        if (efficiency < 0f)
+            efficiency = 0f;
+
+        UpdateCellSize();
+    }
+
+    private void UpdateCellSize()
+    {
+        cellSize = CELLSIZE_PER_FUNCTION * viewRangeValue * efficiency;
     }
 }

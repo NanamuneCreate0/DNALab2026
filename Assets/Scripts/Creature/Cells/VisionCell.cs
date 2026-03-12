@@ -2,16 +2,11 @@ using UnityEngine;
 
 public class VisionCell : CreatureCell
 {
-    const float CellSizeValue = 1.0f;
-    const float ViewRadius = 5f;
-
+    public override float CellSize => 1.0f;
     private Creature ownerCreature;
     private float scanTimer;
 
     private static Collider2D[] results = new Collider2D[32];
-
-    public override float CellSize => CellSizeValue;
-
     public override void Initialize(Creature creature)
     {
         ownerCreature = creature;
@@ -28,6 +23,9 @@ public class VisionCell : CreatureCell
         scanTimer = 0f;
 
         Scan();
+    }
+    public override void OnAging()
+    {
     }
 
     private void Scan()

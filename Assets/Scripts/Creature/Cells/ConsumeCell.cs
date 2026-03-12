@@ -2,12 +2,9 @@ using UnityEngine;
 
 public class ConsumeCell : CreatureCell
 {
+    public override float CellSize => 0.2f;
     private Creature ownerCreature;
-
-    private const float CELL_SIZE = 0.2f;
     private const float CONSUME_RANGE = 0.5f;
-
-    public override float CellSize => CELL_SIZE;
 
     public override void Initialize(Creature creature)
     {
@@ -37,5 +34,8 @@ public class ConsumeCell : CreatureCell
             mana.ExcuteDie();
             break;
         }
+    }
+    public override void OnAging()
+    {
     }
 }

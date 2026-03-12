@@ -30,4 +30,7 @@ public class MoveCell : CreatureCell
         move.Normalize();
         ownerCreature.AddAcceleration(move * ownerCreature.Speed);
     }
+    public override void OnAging()
+    {
+    }
 }

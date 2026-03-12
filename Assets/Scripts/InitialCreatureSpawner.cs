@@ -35,22 +35,26 @@ public class InitialCreatureSpawner : MonoBehaviour
             creature.AddCell(ScriptableObject.CreateInstance<ConsumeCell>());
 
             var speed = ScriptableObject.CreateInstance<SpeedCell>();
-            speed.Init(6f);
+            speed.Init(2f);
             creature.AddCell(speed);
 
             var view = ScriptableObject.CreateInstance<ViewRangeCell>();
-            view.Init(6f);
+            view.Init(2f);
             creature.AddCell(view);
 
             var spProd = ScriptableObject.CreateInstance<SpeedProductionCell>();
-            spProd.Init(0.1f);
+            spProd.Init(1f);
             creature.AddCell(spProd);
 
             var vrProd = ScriptableObject.CreateInstance<ViewRangeProductionCell>();
-            vrProd.Init(0.1f);
+            vrProd.Init(1f);
             creature.AddCell(vrProd);
 
-            creature.ChangeEnergy(creature.TotalCellSize*InitialEnergyRate);
+            creature.ChangeEnergy(creature.TotalCellSize * InitialEnergyRate);
+
+
+            //ƒOƒ‰ƒt•`‰æ—p
+            GameObject.Find("SpeedGraph").GetComponent<SpeedAutoScaleGraph>().targetCreature= creature;
         }
     }
 }
